@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Virgin Atlantic · VS0355 · Baggage Recovery</title>
+  <title>Virgin Atlantic · VS0355 · Baggage Recovery & Telemetry</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Font Awesome Icons 6.5 -->
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <script>
@@ -30,11 +30,9 @@
               red: '#B3122C',
               scarlet: '#E10A1E',
               gold: '#CDA43F',
-              goldsoft: '#E6C976',
               jade: '#3FA383',
-              dark: '#070A11',
-              card: '#0F1626',
-              border: '#1F2A3F'
+              dark: '#080B12',
+              card: '#121826',
             }
           }
         }
@@ -44,39 +42,33 @@
 
   <style>
     :root {
-      --bg: #070a11;
-      --bg-vignette: #0d1424;
-      --card: #0f1626;
-      --card-soft: #0a0f1b;
-      --border: #1f2a3f;
+      --bg: #080b12;
+      --bg-vignette: #0c1119;
+      --card: #121826;
+      --card-soft: #0e1420;
+      --border: #232c3d;
       --border-soft: rgba(233, 228, 214, 0.08);
-      --ink: #f5f2e9;
-      --ink-dim: #b8b3a4;
-      --muted: #8591a8;
-      --muted-dim: #556077;
+      --ink: #f3efe4;
+      --ink-dim: #b9b3a2;
+      --muted: #838ca2;
+      --muted-dim: #5b6377;
       --gold: #cda43f;
       --gold-soft: #e6c976;
       --jade: #3fa383;
-      --jade-soft: rgba(63, 163, 131, 0.12);
-      --scarlet: #e10a1e;
+      --jade-soft: rgba(63, 163, 131, 0.14);
+      --scarlet: #b3122c;
     }
 
-    * { 
-      -webkit-tap-highlight-color: transparent; 
-      box-sizing: border-box;
-    }
+    * { -webkit-tap-highlight-color: transparent; }
     html, body {
       background: var(--bg);
       color: var(--ink);
       font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
     }
 
     .grain {
-      background-image: radial-gradient(circle at 1px 1px, rgba(233,228,214,0.04) 1px, transparent 0);
-      background-size: 20px 20px;
+      background-image: radial-gradient(circle at 1px 1px, rgba(233,228,214,0.05) 1px, transparent 0);
+      background-size: 22px 22px;
     }
 
     .card {
@@ -84,22 +76,25 @@
       border: 1px solid var(--border);
     }
 
+    .divider { border-color: var(--border-soft); }
+
     .btn {
       border: 1px solid var(--border);
-      background: rgba(233, 228, 214, 0.04);
-      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(233, 228, 214, 0.03);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
     }
     .btn:active { transform: scale(0.97); }
-    .btn:hover { background: rgba(233, 228, 214, 0.08); border-color: var(--muted-dim); }
+    .btn:hover { background: rgba(233, 228, 214, 0.07); border-color: var(--muted-dim); }
 
     .btn-gold {
       background: linear-gradient(180deg, var(--gold-soft), var(--gold));
       color: #17130a;
-      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform .15s ease, filter .15s ease;
     }
+    .btn-gold:hover { filter: brightness(1.06); }
     .btn-gold:active { transform: scale(0.97); }
 
-    /* 5-Slide Cinematic Carousel */
+    /* 5-Slide Cinematic Carousel with Ken Burns subtle scale */
     .hero-slide {
       position: absolute;
       inset: 0;
@@ -108,70 +103,67 @@
       object-fit: cover;
       object-position: center;
       opacity: 0;
-      transform: scale(1.02);
-      transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), transform 7s ease-out;
-      pointer-events: none;
+      transform: scale(1.03);
+      transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1), transform 6.5s ease-out;
     }
     .hero-slide.active {
       opacity: 1;
-      transform: scale(1.08);
+      transform: scale(1.10);
     }
 
     .p-dot {
       height: 3px;
-      width: 8px;
+      width: 10px;
       border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.3);
-      transition: all 0.4s ease;
+      background: rgba(255, 255, 255, 0.28);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .p-dot.active {
-      width: 20px;
+      width: 22px;
       background: #ffffff;
     }
 
-    /* Trajectory Arc Motion */
+    /* Trajectory Arc flight motion */
     @keyframes glide {
       from { offset-distance: 0%; opacity: 0; }
-      5% { opacity: 1; }
-      95% { opacity: 1; }
+      6% { opacity: 1; }
+      94% { opacity: 1; }
       to { offset-distance: 100%; opacity: 1; }
     }
     #planeGlide {
-      offset-path: path('M 12 76 C 85 10, 215 10, 288 76');
+      offset-path: path('M 14 92 C 90 10, 210 10, 286 92');
       offset-rotate: auto;
-      animation: glide 2.6s cubic-bezier(.65,.05,.25,1) 0.3s 1 both;
+      animation: glide 2.8s cubic-bezier(.65,.05,.25,1) 0.3s 1 both;
     }
 
     @keyframes pulseLive {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.5; }
+      50% { transform: scale(1.35); opacity: 0.6; }
     }
     .ping-slow {
       animation: pulseLive 2s cubic-bezier(0, 0, 0.2, 1) infinite;
     }
 
-    /* Toast Notification for Clipboard Copy */
-    #toast {
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    #toast.show {
-      visibility: visible;
-      opacity: 1;
-    }
+    .rise { animation: riseIn .6s ease both; }
+    .rise-1 { animation-delay: .05s; }
+    .rise-2 { animation-delay: .12s; }
+    .rise-3 { animation-delay: .19s; }
+    .rise-4 { animation-delay: .26s; }
 
     ::selection { background: var(--gold); color: #17130a; }
   </style>
 </head>
 
-<body class="min-h-screen flex flex-col items-center antialiased pb-12">
+<body class="min-h-screen flex flex-col items-center antialiased pb-12" style="background:var(--bg)">
 
-  <!-- Max-width container designed specifically for pristine mobile viewports -->
-  <div class="w-full max-w-[430px] min-h-screen flex flex-col relative grain shadow-2xl border-x border-slate-800/40" style="background: radial-gradient(120% 50% at 50% -5%, #141d2f 0%, var(--bg-vignette) 40%, var(--bg) 100%);">
+  <div class="w-full max-w-md min-h-screen flex flex-col relative grain" style="background: radial-gradient(120% 60% at 50% -10%, #131c2c 0%, var(--bg-vignette) 45%, var(--bg) 100%);">
 
-    <!-- 1. CINEMATIC 5-IMAGE CAROUSEL (Mobile Fixed Height 210px with clean rounded bottom) -->
-    <div class="relative h-52 w-full overflow-hidden rounded-b-3xl shadow-xl shadow-black/60">
+    <!-- 5-IMAGE CINEMATIC CAROUSEL HERO -->
+    <div class="relative h-52 w-full overflow-hidden rise rise-1">
       <!-- 1: London Iconic Phone Box -->
       <img id="slide0" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=80" 
            alt="London Phone Booth" class="hero-slide active" />
@@ -192,29 +184,29 @@
       <img id="slide4" src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1200&q=80" 
            alt="Boeing 787 Fleet" class="hero-slide" />
 
-      <!-- Gradient overlays for text contrast -->
-      <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-[var(--bg)]/35 to-black/50 pointer-events-none"></div>
+      <!-- Vignette Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--bg)] via-[var(--bg)]/40 to-black/40 pointer-events-none"></div>
 
-      <!-- Top Airline & Flight Header Pill -->
-      <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+      <!-- Top Airline & Flight Pill -->
+      <div class="absolute top-4 left-5 right-5 flex items-center justify-between z-10">
         <div class="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 shadow-lg">
           <span class="w-2 h-2 rounded-full" style="background:var(--scarlet)"></span>
-          <span class="text-[10.5px] font-bold tracking-[0.2em]" style="color: var(--ink)">VIRGIN&nbsp;ATLANTIC</span>
+          <span class="text-[10px] font-semibold tracking-[0.2em]" style="color: var(--ink-dim)">VIRGIN&nbsp;ATLANTIC</span>
         </div>
         <div class="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15 shadow-lg">
-          <i class="fa-solid fa-plane text-[10px]" style="color:var(--gold)"></i>
-          <span class="font-mono text-[11px] font-bold tracking-wider" style="color: var(--ink)">VS0355</span>
+          <i class="fa-solid fa-plane-up text-[10px]" style="color:var(--gold)"></i>
+          <span class="font-mono text-[11px] font-bold" style="color: var(--ink)">VS0355</span>
         </div>
       </div>
 
-      <!-- City Caption & Carousel Indicator Dots -->
-      <div class="absolute bottom-3 left-4 right-4 z-10 flex items-end justify-between">
+      <!-- City Caption & Carousel Dots -->
+      <div class="absolute bottom-3 left-5 right-5 z-10 flex items-end justify-between">
         <div>
-          <p id="citySubtitle" class="text-[10px] font-mono tracking-widest uppercase transition-opacity duration-500 font-semibold" style="color: var(--gold-soft)">Destination Arrival</p>
-          <h2 id="cityTitle" class="font-serif text-[22px] leading-tight font-medium transition-opacity duration-500 drop-shadow" style="color: var(--ink)">London Heathrow</h2>
+          <p id="citySubtitle" class="text-[10px] font-mono tracking-widest uppercase transition-opacity duration-500" style="color: var(--gold-soft)">Destination Arrival</p>
+          <h2 id="cityTitle" class="font-serif text-[23px] leading-tight font-medium transition-opacity duration-500" style="color: var(--ink)">London Heathrow</h2>
         </div>
 
-        <div class="flex items-center gap-1.5 pb-1">
+        <div class="flex items-center gap-1.5 pb-2">
           <span id="dot0" class="p-dot active"></span>
           <span id="dot1" class="p-dot"></span>
           <span id="dot2" class="p-dot"></span>
@@ -224,269 +216,226 @@
       </div>
     </div>
 
-    <!-- 2. ROUTE & ARC SECTION (Clean alignment, no overlapping labels) -->
-    <div class="px-4 pt-3.5 pb-2">
-      <div class="flex items-start justify-between gap-2">
-        <div>
-          <h1 class="font-serif text-[26px] leading-[1.12] font-medium" style="color: var(--ink)">
-            Mumbai to<br>London Heathrow
-          </h1>
-        </div>
-        <div class="text-right shrink-0 pt-0.5">
-          <span class="text-[9.5px] font-mono uppercase tracking-wider block font-semibold" style="color:var(--muted)">Aircraft</span>
-          <span class="text-xs font-mono font-bold whitespace-nowrap block mt-0.5" style="color:var(--gold-soft)">B787-9 Dreamliner</span>
+    <div class="px-5 pt-3 pb-4 rise rise-2">
+      <div class="flex items-baseline justify-between">
+        <h1 class="font-serif text-[27px] leading-[1.15] font-medium" style="color: var(--ink)">
+          Mumbai to<br>London Heathrow
+        </h1>
+        <div class="text-right">
+          <span class="text-[10px] font-mono uppercase tracking-wider block" style="color:var(--muted)">Flight Equipment</span>
+          <span class="text-xs font-mono font-bold" style="color:var(--gold-soft)">B787-9 Dreamliner</span>
         </div>
       </div>
 
-      <p class="text-[12.5px] mt-2 leading-relaxed" style="color: var(--muted)">
+      <p class="text-[13px] mt-2 leading-snug" style="color: var(--muted)">
         This baggage tag belongs to a passenger traveling on Virgin Atlantic Flight VS0355. If found, please use the direct contact buttons below.
       </p>
 
       <!-- Animated Flight Arc -->
-      <div class="relative mt-3 h-[78px]">
-        <svg viewBox="0 0 300 76" class="w-full h-full overflow-visible" fill="none">
-          <path d="M 12 76 C 85 10, 215 10, 288 76" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="2 6" stroke-linecap="round"/>
-          <circle cx="12" cy="76" r="3.5" fill="var(--gold)"/>
-          <circle cx="288" cy="76" r="3.5" fill="var(--gold)"/>
+      <div class="relative mt-5 h-[92px]">
+        <svg viewBox="0 0 300 92" class="w-full h-full overflow-visible" fill="none">
+          <path d="M 14 92 C 90 10, 210 10, 286 92" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="2 6" stroke-linecap="round"/>
+          <circle cx="14" cy="92" r="4" fill="var(--gold)"/>
+          <circle cx="286" cy="92" r="4" fill="var(--gold)"/>
           <g id="planeGlide">
-            <g transform="translate(-9,-9) rotate(90)">
-              <path d="M9 1 L11.5 7.5 L17 9 L11.5 10.5 L9 17 L6.5 10.5 L1 9 L6.5 7.5 Z" fill="var(--gold-soft)"/>
+            <g transform="translate(-10,-10) rotate(90)">
+              <path d="M10 1 L12.8 8.4 L19 10 L12.8 11.6 L10 19 L7.2 11.6 L1 10 L7.2 8.4 Z" fill="var(--gold-soft)"/>
             </g>
           </g>
         </svg>
         <div class="absolute left-0 -bottom-1 text-left">
-          <span class="font-mono text-[12px] font-bold tracking-wide" style="color:var(--scarlet)">BOM</span>
-          <span id="depDateText" class="block text-[10px] font-medium" style="color:var(--muted-dim)">—</span>
+          <span class="font-mono text-[13px] font-bold tracking-wide" style="color:var(--scarlet)">BOM</span>
+          <span id="depDateText" class="block text-[10px] mt-0.5 font-medium" style="color:var(--muted-dim)">—</span>
         </div>
         <div class="absolute right-0 -bottom-1 text-right">
-          <span class="font-mono text-[12px] font-bold tracking-wide" style="color:var(--scarlet)">LHR</span>
-          <span id="arrDateText" class="block text-[10px] font-medium" style="color:var(--muted-dim)">—</span>
+          <span class="font-mono text-[13px] font-bold tracking-wide" style="color:var(--scarlet)">LHR</span>
+          <span id="arrDateText" class="block text-[10px] mt-0.5 font-medium" style="color:var(--muted-dim)">—</span>
         </div>
       </div>
     </div>
 
-    <!-- 3. FLIGHT TELEMETRY CARD (Strictly un-cramped, zero awkward wrapping) -->
-    <div class="px-4 mt-2">
-      <div class="card rounded-2xl p-4 shadow-2xl shadow-black/50 space-y-3.5">
+    <div class="px-5 rise rise-3">
+      <div class="card rounded-2xl p-5 shadow-2xl shadow-black/50 space-y-4">
 
-        <!-- Top Header Row: 100% No-Wrap Single Line -->
-        <div class="flex items-center justify-between pb-2.5 border-b divider text-[11.5px]">
-          <div class="flex items-center gap-1.5 font-mono whitespace-nowrap">
-            <span class="font-bold text-white tracking-wide">VS0355</span>
+        <!-- Aircraft & Flight Stats Row -->
+        <div class="flex items-center justify-between pb-3 border-b divider text-[12px]">
+          <div class="flex items-center gap-2 font-mono">
+            <span class="font-bold text-white">VS0355</span>
             <span style="color:var(--muted-dim)">•</span>
-            <span id="aircraftText" class="whitespace-nowrap" style="color:var(--muted)">B789 (G-VDIA)</span>
+            <span id="aircraftText" style="color:var(--muted)">B789 (G-VDIA)</span>
           </div>
-          <div class="flex items-center gap-2 font-mono whitespace-nowrap">
-            <span class="flex items-center gap-1.5 font-bold text-[10.5px]" style="color:var(--jade)">
+          <div class="flex items-center gap-2 font-mono">
+            <span class="flex items-center gap-1.5 font-bold text-[11px]" style="color:var(--jade)">
               <span class="w-2 h-2 rounded-full bg-emerald-400 ping-slow"></span> AIRBORNE
             </span>
             <span style="color:var(--muted-dim)">•</span>
-            <span class="whitespace-nowrap font-medium" style="color:var(--muted)">9h 50m</span>
+            <span style="color:var(--muted)">9h 50m</span>
           </div>
         </div>
 
-        <!-- Times Row: Clock Numbers with Sched Subtext -->
-        <div class="flex items-baseline justify-between pt-0.5">
+        <!-- Times: Actual Verified Departure & Estimated Landing -->
+        <div class="flex items-baseline justify-between">
           <div>
-            <span class="text-[9.5px] font-mono font-bold uppercase tracking-wider block" style="color:var(--muted)">Departed (Actual)</span>
-            <span class="font-serif text-[30px] leading-none tracking-tight block mt-1" style="color:var(--ink)">11:58am</span>
-            <span class="font-mono text-[9.5px] block mt-1" style="color:var(--muted-dim)">Sched: 11:25am</span>
+            <span class="text-[10px] font-medium uppercase tracking-wider block" style="color:var(--muted)">Departed (Actual)</span>
+            <span class="font-serif text-[32px] leading-none tracking-tight" style="color:var(--ink)">11:58am</span>
+            <span class="font-mono text-[10px] block mt-1" style="color:var(--muted-dim)">Sched: 11:25am</span>
           </div>
           <div class="text-right">
-            <span class="text-[9.5px] font-mono font-bold uppercase tracking-wider block" style="color:var(--jade)">Estimated Arrival</span>
-            <span class="font-serif text-[30px] leading-none tracking-tight block mt-1" style="color:var(--jade)">4:36pm</span>
-            <span class="font-mono text-[9.5px] block mt-1" style="color:var(--muted-dim)">Sched: 4:45pm</span>
+            <span class="text-[10px] font-medium uppercase tracking-wider block" style="color:var(--jade)">Estimated Arrival</span>
+            <span class="font-serif text-[32px] leading-none tracking-tight" style="color:var(--jade)">4:36pm</span>
+            <span class="font-mono text-[10px] block mt-1" style="color:var(--muted-dim)">Sched: 4:45pm</span>
           </div>
         </div>
 
-        <!-- In-Flight Status Badge -->
-        <div class="rounded-xl px-3 py-2 flex items-center justify-center gap-2 font-mono text-[11px] font-semibold tracking-wide" style="background: var(--jade-soft); color: var(--jade); border:1px solid rgba(63,163,131,0.25)">
-          <i class="fa-solid fa-plane-departure text-[11px]"></i>
+        <!-- In Flight Status Pill -->
+        <div class="rounded-xl px-3 py-2.5 flex items-center justify-center gap-2 font-mono text-[11px] font-semibold tracking-wide" style="background: var(--jade-soft); color: var(--jade); border:1px solid rgba(63,163,131,0.3)">
+          <i class="fa-solid fa-plane-departure text-xs"></i>
           <span>Nonstop · Verified Departed & Airborne</span>
         </div>
 
-        <!-- Ground Station Grid: 3-column with guaranteed clean formatting -->
-        <div class="grid grid-cols-12 items-center pt-2.5 border-t divider gap-1 text-[11.5px]">
-          <!-- Mumbai Origin (Col 5) -->
-          <div class="col-span-5 text-left leading-tight">
-            <span class="font-bold block text-[12px] truncate" style="color: var(--scarlet)">Mumbai (BOM)</span>
-            <span class="block mt-1 font-semibold text-slate-200 truncate">Terminal 2</span>
-            <div class="flex items-center gap-1.5 mt-0.5 font-mono text-[10.5px]">
-              <span class="font-bold" style="color:var(--jade)">Gate 70</span>
-              <span class="text-[9px] px-1 py-0.2 rounded bg-slate-800 text-slate-400">CSMIA</span>
-            </div>
+        <!-- Ground Station Terminals & Seat Allocation -->
+        <div class="grid grid-cols-12 items-start pt-3 border-t divider gap-1 text-[12px]">
+          <div class="col-span-5 text-left">
+            <span class="font-semibold block truncate" style="color: var(--scarlet)">Mumbai · BOM</span>
+            <span class="block mt-1 font-medium" style="color:var(--ink-dim)">CSMIA Terminal 2</span>
+            <span class="text-[10.5px] font-mono block mt-0.5" style="color:var(--muted)">Adani Ground Control</span>
           </div>
           
-          <!-- Seat & Class Allocation Badge (Col 2) -->
-          <div class="col-span-2 flex flex-col items-center justify-center text-center px-1">
-            <span class="text-[11px] font-black px-2 py-0.5 rounded shadow-sm" style="background:var(--gold); color:#17130a">60A</span>
-            <span class="text-[8px] font-mono font-semibold mt-1 leading-none uppercase text-slate-400 whitespace-nowrap">Economy</span>
-            <span class="text-[7.5px] font-mono mt-0.5 leading-none uppercase text-slate-500 whitespace-nowrap">Classic</span>
+          <div class="col-span-2 flex flex-col items-center justify-center text-center pt-0.5">
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded shadow-sm" style="background:var(--gold); color:#17130a">60A</span>
+            <span class="text-[8.5px] font-medium mt-1.5 leading-tight uppercase" style="color:var(--muted-dim)">Economy<br>Classic</span>
           </div>
           
-          <!-- London Destination (Col 5) -->
-          <div class="col-span-5 text-right leading-tight">
-            <span class="font-bold block text-[12px] truncate" style="color: var(--scarlet)">Heathrow (LHR)</span>
-            <span class="block mt-1 font-semibold text-slate-200 truncate">Terminal 3</span>
-            <div class="flex items-center justify-end gap-1.5 mt-0.5 font-mono text-[10.5px]">
-              <span class="font-bold" style="color:var(--jade)">Gate 20</span>
-              <span class="text-[9px] px-1 py-0.2 rounded bg-slate-800 text-slate-400">Arrivals</span>
-            </div>
+          <div class="col-span-5 text-right">
+            <span class="font-semibold block truncate" style="color: var(--scarlet)">Heathrow · LHR</span>
+            <span class="block mt-1 font-medium" style="color:var(--ink-dim)">Heathrow Terminal 3</span>
+            <span class="text-[10.5px] font-mono block mt-0.5" style="color:var(--muted)">International Arrivals</span>
           </div>
         </div>
 
         <!-- 1-Tap Real-Time Tracking Link Actions -->
-        <div class="grid grid-cols-2 gap-2 pt-2.5 border-t divider">
+        <div class="grid grid-cols-2 gap-2 pt-3 border-t divider">
           <a href="https://csmia-mumbai.adaniairports.com/en/flight-status" target="_blank" rel="noopener noreferrer"
              class="btn rounded-xl py-2.5 px-2 flex items-center justify-center gap-2 text-[11px] font-semibold font-mono" style="color: var(--ink-dim)">
-            <i class="fa-solid fa-door-open text-[11px]" style="color:var(--gold)"></i>
+            <i class="fa-solid fa-building-user text-[11px]" style="color:var(--gold)"></i>
             <span>CSMIA Board</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-70"></i>
           </a>
           <a href="https://www.flightradar24.com/VS355" target="_blank" rel="noopener noreferrer"
              class="btn rounded-xl py-2.5 px-2 flex items-center justify-center gap-2 text-[11px] font-semibold font-mono" style="color: var(--jade)">
             <i class="fa-solid fa-satellite-dish text-[11px] animate-pulse"></i>
             <span>Flightradar24</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-60"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-70"></i>
           </a>
         </div>
       </div>
     </div>
 
-    <!-- 4. FOUND BAG INCENTIVE & CONTACT CARDS -->
-    <div class="p-4 space-y-3.5 flex-1">
+    <div class="p-5 space-y-4 flex-1 rise rise-4">
 
-      <!-- Found Luggage Reward / Notice Card -->
-      <div class="p-3.5 rounded-2xl flex items-center justify-between gap-3 border border-amber-400/30 shadow-lg" style="background: linear-gradient(135deg, rgba(205,164,63,0.12) 0%, rgba(205,164,63,0.04) 100%);">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style="background:rgba(205,164,63,0.2)">
-            <i class="fa-solid fa-hand-holding-heart text-[13px]" style="color:var(--gold-soft)"></i>
-          </div>
-          <div>
-            <p class="text-[12px] font-bold" style="color:var(--gold-soft)">Found this baggage?</p>
-            <p class="text-[10.5px] leading-tight text-slate-300">Reward & reimbursement guaranteed upon return.</p>
-          </div>
-        </div>
-        <button onclick="copyPassengerCard()" class="btn text-[10.5px] font-mono font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1 shrink-0" style="color:var(--gold-soft); border-color: rgba(205,164,63,0.4)">
-          <i class="fa-regular fa-copy text-[10px]"></i>
-          <span>Copy</span>
-        </button>
-      </div>
-
-      <!-- Section Title -->
-      <div class="flex items-center gap-3 pt-1">
+      <div class="flex items-center gap-3">
         <div class="h-px flex-1" style="background:var(--border-soft)"></div>
-        <span class="text-[10.5px] font-mono uppercase tracking-widest font-semibold" style="color:var(--muted)">Owner & Delivery Contacts</span>
+        <span class="text-[11px] font-mono uppercase tracking-widest" style="color:var(--muted)">Baggage Ownership Details</span>
         <div class="h-px flex-1" style="background:var(--border-soft)"></div>
       </div>
 
       <!-- PRIMARY PASSENGER (UK DESTINATION) -->
-      <div class="card rounded-2xl p-4 shadow-xl space-y-3">
-        <div class="flex items-center justify-between pb-2.5 border-b divider">
+      <div class="card rounded-2xl p-4 shadow-xl shadow-black/40 space-y-3">
+        <div class="flex items-center justify-between pb-3 border-b divider">
           <div>
-            <span class="text-[9.5px] font-mono uppercase tracking-wider block font-semibold" style="color:var(--muted)">Primary Passenger (Owner)</span>
-            <h3 class="font-serif text-[16.5px] mt-0.5 font-bold tracking-wide text-white">SOFIYABANU SAHILBEG MIRZA</h3>
+            <span class="text-[10px] font-mono uppercase tracking-wider block" style="color:var(--muted)">Primary Passenger</span>
+            <h3 class="font-serif text-[17px] mt-0.5 font-medium tracking-wide" style="color:var(--ink)">SOFIYABANU SAHILBEG MIRZA</h3>
           </div>
-          <span class="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded shadow-sm" style="background: var(--gold-soft); color:#17130a">UK</span>
+          <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded" style="background: var(--gold-soft); color:#17130a">UK</span>
         </div>
 
-        <!-- London Destination Address with Direct Map Button -->
-        <div class="p-3 rounded-xl flex items-start justify-between gap-2.5" style="background: var(--card-soft); border: 1px solid var(--border-soft)">
+        <!-- London Destination Address -->
+        <div class="p-3 rounded-xl flex items-start justify-between gap-3" style="background: var(--card-soft); border: 1px solid var(--border-soft)">
           <div class="flex items-start gap-2.5">
-            <i class="fa-solid fa-location-dot text-[13px] mt-1 shrink-0" style="color:var(--scarlet)"></i>
+            <i class="fa-solid fa-location-dot text-[14px] mt-1 shrink-0" style="color:var(--scarlet)"></i>
             <div>
-              <p class="text-[13px] font-bold text-slate-200">281 Upton Lane</p>
-              <p class="font-mono text-[11px] mt-0.5 text-slate-400">E7 9PR, London, United Kingdom</p>
+              <p class="text-[13.5px] font-semibold" style="color:var(--ink-dim)">281 Upton Lane</p>
+              <p class="font-mono text-[11px] mt-0.5" style="color:var(--muted)">E7 9PR, London, United Kingdom</p>
             </div>
           </div>
           <a href="https://maps.google.com/?q=281+Upton+Lane,+E7+9PR,+London" target="_blank" rel="noopener noreferrer"
-             class="btn text-[10.5px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-semibold shrink-0" style="color:#8fb4e0">
+             class="btn text-[11px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium shrink-0" style="color:#8fb4e0">
             <span>Map</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
           </a>
         </div>
 
         <!-- 1-Tap Call and WhatsApp Buttons -->
-        <div class="grid grid-cols-2 gap-2 pt-0.5">
+        <div class="grid grid-cols-2 gap-2 pt-1">
           <a href="tel:+447767552439" 
-             class="btn rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-bold text-white shadow">
+             class="btn rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-bold" style="color:var(--ink)">
             <i class="fa-solid fa-phone text-xs" style="color:var(--jade)"></i>
-            <span>Call UK</span>
+            <span>Call Sahilbeg</span>
           </a>
           <a href="https://wa.me/447767552439?text=Hello%20Sahilbeg,%20I%20have%20found%20your%20luggage%20from%20flight%20VS0355%20(BOM-LHR)." 
              target="_blank" rel="noopener noreferrer"
-             class="btn-gold rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-black shadow-md">
+             class="btn-gold rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-bold shadow-md">
             <i class="fa-brands fa-whatsapp text-sm text-[#17130a]"></i>
             <span>WhatsApp</span>
           </a>
         </div>
 
-        <p class="text-center font-mono text-[11px] pt-0.5" style="color:var(--muted)">
+        <p class="text-center font-mono text-[11px]" style="color:var(--muted)">
           Direct: <strong class="text-slate-200">+44 776 755 2439</strong>
         </p>
       </div>
 
       <!-- EMERGENCY CONTACT (INDIA ORIGIN) -->
-      <div class="card rounded-2xl p-4 shadow-xl space-y-3" style="opacity: 0.95">
-        <div class="flex items-center justify-between pb-2.5 border-b divider">
+      <div class="card rounded-2xl p-4 shadow-xl shadow-black/40 space-y-3" style="opacity: 0.95">
+        <div class="flex items-center justify-between pb-3 border-b divider">
           <div>
-            <span class="text-[9.5px] font-mono uppercase tracking-wider block font-semibold" style="color:var(--muted)">Origin Emergency Contact</span>
-            <h4 class="font-serif text-[15.5px] mt-0.5 font-bold tracking-wide" style="color:var(--ink-dim)">SAHILBEG ZAKIRBEG MIRZA</h4>
+            <span class="text-[10px] font-mono uppercase tracking-wider block" style="color:var(--muted)">Origin Emergency Contact</span>
+            <h4 class="font-serif text-[15.5px] mt-0.5 font-medium" style="color:var(--ink-dim)">SAHILBEG ZAKIRBEG MIRZA</h4>
           </div>
-          <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded" style="background: var(--border); color:var(--muted)">INDIA</span>
+          <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded" style="background: var(--border); color:var(--muted)">IN</span>
         </div>
 
         <!-- Gujarat Residence Address -->
-        <div class="p-3 rounded-xl flex items-start justify-between gap-2.5" style="background: var(--card-soft); border: 1px solid var(--border-soft)">
+        <div class="p-3 rounded-xl flex items-start justify-between gap-3" style="background: var(--card-soft); border: 1px solid var(--border-soft)">
           <div class="flex items-start gap-2.5">
-            <i class="fa-solid fa-house text-[12.5px] mt-1 shrink-0" style="color:var(--gold)"></i>
+            <i class="fa-solid fa-house-user text-[13px] mt-1 shrink-0" style="color:var(--gold)"></i>
             <div>
-              <p class="text-[12.5px] font-medium text-slate-200">B/7,8 Vrundavan Society, Convent Road</p>
-              <p class="font-mono text-[10.5px] mt-0.5 text-slate-400">Bilimora – 396321, Gujarat, India</p>
+              <p class="text-[13px] font-medium" style="color:var(--ink-dim)">B/7,8 Vrundavan Society, Convent Road</p>
+              <p class="font-mono text-[11px] mt-0.5" style="color:var(--muted)">Bilimora – 396321, Gujarat, India</p>
             </div>
           </div>
           <a href="https://maps.app.goo.gl/kGhGZn9y8bQPPuLs5" target="_blank" rel="noopener noreferrer"
-             class="btn text-[10.5px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-semibold shrink-0" style="color:var(--gold-soft)">
+             class="btn text-[11px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 font-medium shrink-0" style="color:var(--gold-soft)">
             <span>Map</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
           </a>
         </div>
 
         <!-- 1-Tap Call and WhatsApp India -->
-        <div class="grid grid-cols-2 gap-2 pt-0.5">
+        <div class="grid grid-cols-2 gap-2 pt-1">
           <a href="tel:+919426834535" 
-             class="btn rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-medium text-slate-300">
+             class="btn rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-medium" style="color:var(--ink-dim)">
             <i class="fa-solid fa-phone text-xs" style="color:var(--muted)"></i>
             <span>Call India</span>
           </a>
           <a href="https://wa.me/919426834535?text=Hello%20Sofiyabanu,%20I%20have%20found%20luggage%20belonging%20to%20flight%20VS0355." 
              target="_blank" rel="noopener noreferrer"
-             class="btn rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-semibold" style="color:var(--jade)">
+             class="btn rounded-xl py-2.5 px-3 flex items-center justify-center gap-2 text-[12px] font-medium" style="color:var(--jade)">
             <i class="fa-brands fa-whatsapp text-sm" style="color:var(--jade)"></i>
             <span>WhatsApp</span>
           </a>
         </div>
 
-        <p class="text-center font-mono text-[11px] pt-0.5" style="color:var(--muted)">
+        <p class="text-center font-mono text-[11px]" style="color:var(--muted)">
           Direct: <strong class="text-slate-300">+91 942 683 4535</strong>
         </p>
       </div>
 
-      <!-- Airline Tracing Report Link -->
-      <div class="pt-1 text-center">
-        <a href="mailto:baggage.tracing@fly.virgin.com?subject=Found%20Luggage%20VS0355%20-%20Sofiyabanu%20Mirza"
-           class="text-[11px] font-mono text-slate-400 hover:text-slate-200 underline decoration-slate-700 transition-colors">
-          Airport Staff: Report to Virgin Atlantic Baggage Tracing
-        </a>
-      </div>
+      <p class="text-center text-[11px] pt-1" style="color:var(--muted-dim)">
+        Thank you for assisting in safely recovering this baggage.
+      </p>
     </div>
 
-  </div>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 px-4 py-2.5 rounded-full bg-emerald-500 text-black font-mono font-bold text-xs shadow-2xl flex items-center gap-2 z-50">
-    <i class="fa-solid fa-check"></i>
-    <span>Passenger & Address copied to clipboard!</span>
   </div>
 
   <script>
@@ -527,8 +476,8 @@
             titleEl.style.opacity = '1';
             subEl.style.opacity = '1';
           }
-        }, 350);
-      }, 4500); // Transitions smoothly every 4.5 seconds
+        }, 400);
+      }, 4500); // Transitions every 4.5 seconds
     }
 
     // Automatically calculate local dates without manual updates
@@ -555,24 +504,6 @@
       const arrEl = document.getElementById('arrDateText');
       if (depEl) depEl.textContent = depDate;
       if (arrEl) arrEl.textContent = arrDate;
-    }
-
-    // 1-Tap Copy Passenger Address for Couriers or Airport Staff
-    function copyPassengerCard() {
-      const textToCopy = "Virgin Atlantic Flight VS0355\nPassenger: Sofiyabanu Sahilbeg Mirza\nUK Address: 281 Upton Lane, London E7 9PR, UK\nPhone: +44 776 755 2439\nIndia: +91 942 683 4535";
-      
-      const el = document.createElement('textarea');
-      el.value = textToCopy;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-
-      const toast = document.getElementById('toast');
-      if (toast) {
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2600);
-      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
