@@ -324,7 +324,8 @@
             <span class="truncate">CSMIA Board</span>
             <i class="fa-solid fa-arrow-up-right-from-square text-[8px] xs:text-[9px] opacity-70 shrink-0"></i>
           </a>
-          <a href="https://www.flightradar24.com/VS355" target="_blank" rel="noopener noreferrer"
+          <!-- Direct App Launcher Link for Flightradar24 -->
+          <a href="javascript:void(0)" onclick="openFlightRadar()"
              class="btn rounded-xl py-2 xs:py-2.5 px-2 flex items-center justify-center gap-1.5 xs:gap-2 text-[10px] xs:text-[11px] font-semibold font-mono" style="color: var(--jade)">
             <i class="fa-solid fa-satellite-dish text-[10px] xs:text-[11px] animate-pulse"></i>
             <span class="truncate">Flightradar24</span>
@@ -443,6 +444,33 @@
   </div>
 
   <script>
+    // Deep link dispatcher for Flightradar24
+    function openFlightRadar() {
+      const flightCode = 'VS355';
+      const webUrl = `https://www.flightradar24.com/${flightCode}`;
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isAndroid) {
+        // Android Intent directly tries the package 'com.flightradar24free' and falls back to browser URL
+        window.location.href = `intent://www.flightradar24.com/${flightCode}#Intent;scheme=https;package=com.flightradar24free;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
+      } else if (isIOS) {
+        // iOS custom scheme trigger with visibility change detection
+        const appUrl = `flightradar://${flightCode}`;
+        const start = Date.now();
+        window.location.href = appUrl;
+
+        setTimeout(() => {
+          if (!document.hidden && Date.now() - start < 2000) {
+            window.location.href = webUrl;
+          }
+        }, 1200);
+      } else {
+        // Desktop or other devices
+        window.open(webUrl, '_blank', 'noopener,noreferrer');
+      }
+    }
+
     // 5-Slide Cinematic Carousel Configuration
     const slidesMeta = [
       { title: 'London Heathrow', subtitle: 'Destination Arrival' },
