@@ -325,12 +325,12 @@
             <i class="fa-solid fa-arrow-up-right-from-square text-[8px] xs:text-[9px] opacity-70 shrink-0"></i>
           </a>
           <!-- Direct App Launcher Link for Flightradar24 -->
-          <a href="javascript:void(0)" onclick="openFlightRadar()"
-             class="btn rounded-xl py-2 xs:py-2.5 px-2 flex items-center justify-center gap-1.5 xs:gap-2 text-[10px] xs:text-[11px] font-semibold font-mono" style="color: var(--jade)">
-            <i class="fa-solid fa-satellite-dish text-[10px] xs:text-[11px] animate-pulse"></i>
-            <span class="truncate">Flightradar24</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[8px] xs:text-[9px] opacity-70 shrink-0"></i>
-          </a>
+         <a href="https://fr24.com/VS355" onclick="openFlightRadar(event)"
+           class="btn rounded-xl py-2 xs:py-2.5 px-2 flex items-center justify-center gap-1.5 xs:gap-2 text-[10px] xs:text-[11px] font-semibold font-mono" style="color: var(--jade)">
+          <i class="fa-solid fa-satellite-dish text-[10px] xs:text-[11px] animate-pulse"></i>
+          <span class="truncate">Flightradar24</span>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[8px] xs:text-[9px] opacity-70 shrink-0"></i>
+        </a>
         </div>
       </div>
     </div>
@@ -445,27 +445,30 @@
 
   <script>
     // Deep link dispatcher for Flightradar24
-    function openFlightRadar() {
-      const flightCode = 'VS355';
-      const webUrl = `https://www.flightradar24.com/${flightCode}`;
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    function openFlightRadar(e) {
+  const flightCode = 'VS355';
+  const webFallback = `https://www.flightradar24.com/${flightCode}`;
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      if (isAndroid) {
-        // Android Intent directly tries the package 'com.flightradar24free' and falls back to browser URL
-        window.location.href = `intent://www.flightradar24.com/${flightCode}#Intent;scheme=https;package=com.flightradar24free;S.browser_fallback_url=${encodeURIComponent(webUrl)};end`;
-      } else if (isIOS) {
-        // iOS custom scheme trigger with visibility change detection
-        const appUrl = `flightradar://${flightCode}`;
-        const start = Date.now();
-        window.location.href = appUrl;
+  if (isAndroid) {
+    if (e) e.preventDefault();
+    // Android Intent: Directly targets the installed Flightradar24 application package
+    window.location.href = `intent://flight/${flightCode}#Intent;scheme=flightradar24;package=com.flightradar24free;S.browser_fallback_url=${encodeURIComponent(webFallback)};end`;
+  } else if (isIOS) {
+    if (e) e.preventDefault();
+    // iOS: Trigger official app custom URI scheme, fallback to Universal Link
+    const appUri = `flightradar24://flight/${flightCode}`;
+    const start = Date.now();
+    window.location.href = appUri;
 
-        setTimeout(() => {
-          if (!document.hidden && Date.now() - start < 2000) {
-            window.location.href = webUrl;
-          }
-        }, 1200);
-      } else {
+    setTimeout(() => {
+      // If the browser is still in focus after 1 second, the app is not installed
+      if (!document.hidden && (Date.now() - start) < 1500) {
+        window.location.href = `https://fr24.com/${flightCode}`;
+      }
+    }, 1000);
+  } else {
         // Desktop or other devices
         window.open(webUrl, '_blank', 'noopener,noreferrer');
       }
